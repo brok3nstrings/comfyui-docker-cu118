@@ -1,0 +1,23 @@
+services:
+  comfyui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: comfyui:cu118
+    shm_size: "8g"
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    volumes:
+      - ./models:/opt/ComfyUI/models
+      - ./output:/opt/ComfyUI/output
+      - ./user:/opt/ComfyUI/user
+      - ./custom_nodes:/opt/ComfyUI/custom_nodes
+    ports:
+      - "8188:8188"
+    # If you need explicit GPU device requests, run with `docker run --gpus all`
+    # or use a compose spec that supports device_requests. By default, docker
+    # on a machine with nvidia-container-toolkit will allow GPU access when
+    # containers are started with `--gpus`.
+    restart: unless-stopped
